@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,3 +15,5 @@ Route::get('holamon',function(){
 Route::get('holamon/{nom}',function($nom){
     return 'Hola Mon! '.$nom;
 });
+
+Route::apiResource('tasks',TaskController::class);

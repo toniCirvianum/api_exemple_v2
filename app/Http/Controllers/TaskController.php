@@ -34,7 +34,7 @@ class TaskController extends Controller
      * Tasks List
      * @OA\Get (
      *     path="/api/tasks",
-     *     tags={"tasks"},
+     *     tags={"get_tasks"},
      *     @OA\Response(
      *         response=200,
      *         description="OK",
@@ -110,6 +110,39 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+    /**
+     * Crea uan tasca
+     * @OA\Post (
+     *     path="/api/tasks",
+     *     tags={"create_task"},
+     *     @OA\Response(
+     *         response=201,
+     *         description="Task created successfully",
+     *     ),
+     *    @OA\RequestBody(
+     *         required=true,
+     *         description="User details",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", example="Task swaggger"),
+     *             @OA\Property(property="description", type="string", example="This a typical descrition for a task"),
+     *             @OA\Property(property="user_id", type="string", example="2"),
+     *
+     *
+     *         )
+     *     ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Validation error",
+     *      ),
+     *      @OA\Response(
+     *          response=405,
+     *          description="Validation error",
+     *      )
+     *)
+     *)
+     */
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -147,48 +180,56 @@ class TaskController extends Controller
      */
     /**
      * @OA\Get(
-     *     path="/tasks/{id}",
-     *     summary="Get a task by ID",
-     *     description="Retrieve the details of a specific task by its ID.",
+     *     path="/api/tasks/{id}",
+     *     summary="Get task by id",
+     *     description="Return a task by Id",
      *     operationId="getTaskById",
-     *     tags={"Tasks"},
+     *     tags={"get_task_bt_id"},
+     *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="ID of the task to retrieve",
+     *         description="ID de la tarea a recuperar",
      *         required=true,
      *         @OA\Schema(type="string")
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
-     *         description="Task retrieved successfully",
+     *         description="Tarea encontrada correctamente",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="boolean", example=true),
-     *             @OA\Property(property="task", type="object", ref="#/components/schemas/Task"),
+     *             @OA\Property(property="task", type="object",
+     *                 @OA\Property(property="id", type="string", example="1"),
+     *                 @OA\Property(property="title", type="string", example="Completar el informe"),
+     *                 @OA\Property(property="description", type="string", example="El informe debe ser entregado el lunes"),
+     *                 @OA\Property(property="status", type="string", example="pending")
+     *             ),
      *             @OA\Property(property="httpCode", type="integer", example=200)
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=404,
-     *         description="Task not found",
+     *         description="Tarea no encontrada",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Task not found"),
      *             @OA\Property(property="httpCode", type="integer", example=404)
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=500,
-     *         description="Internal server error",
+     *         description="Error interno del servidor",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Error details"),
+     *             @OA\Property(property="message", type="string", example="Error inesperado"),
      *             @OA\Property(property="httpCode", type="integer", example=500)
      *         )
      *     )
      * )
      */
-
     public function show(string $id)
     {
         $task = Task::find($id);
@@ -225,6 +266,85 @@ class TaskController extends Controller
 
     /**
      * Update the specified resource in storage.
+     */
+
+    /**
+     * @OA\Put(
+     *     path="/api/tasks/{id}",
+     *     summary="Udpate task by id",
+     *     description="Update a task by Id",
+     *     operationId="updateTask",
+     *     tags={"update_task"},
+     *
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID de la tarea a actualizar",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Datos necesarios para actualizar la tarea",
+     *         @OA\JsonContent(
+     *             required={"name", "description", "user_id"},
+     *             @OA\Property(property="name", type="string", example="Nueva tarea actualizada", description="Nombre de la tarea"),
+     *             @OA\Property(property="description", type="string", example="Descripción actualizada de la tarea", description="Descripción de la tarea"),
+     *             @OA\Property(property="user_id", type="integer", example=1, description="ID del usuario responsable")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Tarea actualizada correctamente",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Task updated"),
+     *             @OA\Property(property="httpCode", type="integer", example=200)
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=404,
+     *         description="Tarea no encontrada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="No query results for model [Task]"),
+     *             @OA\Property(property="httpCode", type="integer", example=404)
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=422,
+     *         description="Error de validación",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="object",
+     *                 @OA\Property(property="name", type="array",
+     *                     @OA\Items(type="string", example="The name field is required.")
+     *                 ),
+     *                 @OA\Property(property="description", type="array",
+     *                     @OA\Items(type="string", example="The description field is required.")
+     *                 ),
+     *                 @OA\Property(property="user_id", type="array",
+     *                     @OA\Items(type="string", example="The user_id field must exist.")
+     *                 )
+     *             ),
+     *             @OA\Property(property="httpCode", type="integer", example=422)
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error interno del servidor",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Error inesperado"),
+     *             @OA\Property(property="httpCode", type="integer", example=500)
+     *         )
+     *     )
+     * )
      */
     public function update(Request $request, string $id)
     {
@@ -271,6 +391,55 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+
+    /**
+     * @OA\Delete(
+     *     path="/api/tasks/{id}",
+     *     summary="Eliminar una tarea",
+     *     description="Elimina una tarea específica por su ID. Devuelve un error si la tarea no existe.",
+     *     operationId="deleteTask",
+     *     tags={"delete_task"},
+     *
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID de la tarea a eliminar",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Tarea eliminada correctamente",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Task deleted successfully"),
+     *             @OA\Property(property="httpCode", type="integer", example=200)
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=404,
+     *         description="Tarea no encontrada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="No query results for model [Task]"),
+     *             @OA\Property(property="errorCode", type="integer", example=404)
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error interno del servidor",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Error inesperado al eliminar la tarea"),
+     *             @OA\Property(property="httpCode", type="integer", example=500)
+     *         )
+     *     )
+     * )
+     */
+
     public function destroy(string $id)
     {
         try {

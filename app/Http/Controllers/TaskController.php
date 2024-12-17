@@ -145,6 +145,50 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      */
+    /**
+     * @OA\Get(
+     *     path="/tasks/{id}",
+     *     summary="Get a task by ID",
+     *     description="Retrieve the details of a specific task by its ID.",
+     *     operationId="getTaskById",
+     *     tags={"Tasks"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the task to retrieve",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Task retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="task", type="object", ref="#/components/schemas/Task"),
+     *             @OA\Property(property="httpCode", type="integer", example=200)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Task not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Task not found"),
+     *             @OA\Property(property="httpCode", type="integer", example=404)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Error details"),
+     *             @OA\Property(property="httpCode", type="integer", example=500)
+     *         )
+     *     )
+     * )
+     */
+
     public function show(string $id)
     {
         $task = Task::find($id);

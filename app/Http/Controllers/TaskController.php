@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -34,7 +36,7 @@ class TaskController extends Controller
      * Tasks List
      * @OA\Get (
      *     path="/api/tasks",
-     *     tags={"get_tasks"},
+     *     tags={"tasks"},
      *     @OA\Response(
      *         response=200,
      *         description="OK",
@@ -85,9 +87,21 @@ class TaskController extends Controller
     {
         try {
             $tasks = Task::all();
+            $tasksToResponse = [];
+            foreach ($tasks as $task) {
+                $tasksToResponse[] = [
+                    'id' => $task->id,
+                    'name' => $task->name,
+                    'description' => $task->description,
+                    'user_id' => User::find($task->user_id),
+                    'category_id' => Category::find($task->category_id),
+                    'created_at' => $task->created_at,
+                    'updated_at' => $task->updated_at
+                ];
+            }
             return response()->json([
                 'status' => true,
-                'tasks' => $tasks,
+                'tasks' => $tasksToResponse,
                 'httpCode' => 200
             ]);
         } catch (\Throwable $th) {
@@ -98,6 +112,8 @@ class TaskController extends Controller
             ]);
         }
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -115,7 +131,7 @@ class TaskController extends Controller
      * Crea uan tasca
      * @OA\Post (
      *     path="/api/tasks",
-     *     tags={"create_task"},
+     *     tags={"tasks"},
      *     @OA\Response(
      *         response=201,
      *         description="Task created successfully",
@@ -148,7 +164,8 @@ class TaskController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:50'],
             'description' => ['required', 'string'],
-            'user_id' => ['required', 'exists:users,id']
+            'user_id' => ['required', 'exists:users,id'],
+            'category_id' => ['required', 'exists:categories,id']
         ]);
 
         if ($validator->fails()) {
@@ -184,7 +201,7 @@ class TaskController extends Controller
      *     summary="Get task by id",
      *     description="Return a task by Id",
      *     operationId="getTaskById",
-     *     tags={"get_task_bt_id"},
+     *     tags={"tasks"},
      *
      *     @OA\Parameter(
      *         name="id",
@@ -241,11 +258,23 @@ class TaskController extends Controller
             ]);
         }
 
+        $tasksToResponse[] = [
+            'id' => $task->id,
+            'name' => $task->name,
+            'description' => $task->description,
+            'user_id' => User::find($task->user_id),
+            'category_id' => Category::find($task->category_id),
+            'created_at' => $task->created_at,
+            'updated_at' => $task->updated_at
+        ];
+
+        
+
         try {
             return response()->json([
                 'status' => true,
-                'task' => $task,
-                'httpCode' => 404
+                'task' => $tasksToResponse,
+                'httpCode' => 200
             ]);
         } catch (\Throwable $th) {
             return response()->json([
@@ -274,7 +303,7 @@ class TaskController extends Controller
      *     summary="Udpate task by id",
      *     description="Update a task by Id",
      *     operationId="updateTask",
-     *     tags={"update_task"},
+     *     tags={"tasks"},
      *
      *     @OA\Parameter(
      *         name="id",
@@ -361,7 +390,8 @@ class TaskController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:50'],
             'description' => ['required', 'string'],
-            'user_id' => ['required', 'exists:users,id']
+            'user_id' => ['required', 'exists:users,id'],
+            'category_id' => ['required', 'exists:categories,id']
         ]);
 
         if ($validator->fails()) {
@@ -395,22 +425,22 @@ class TaskController extends Controller
     /**
      * @OA\Delete(
      *     path="/api/tasks/{id}",
-     *     summary="Eliminar una tarea",
-     *     description="Elimina una tarea específica por su ID. Devuelve un error si la tarea no existe.",
+     *     summary="delete task by id",
+     *     description="Elimina una tasca a través del id que es passa per paràmetre",
      *     operationId="deleteTask",
-     *     tags={"delete_task"},
+     *     tags={"tasks"},
      *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="ID de la tarea a eliminar",
+     *         description="id de la tasca a eliminar",
      *         required=true,
      *         @OA\Schema(type="string")
      *     ),
      *
      *     @OA\Response(
      *         response=200,
-     *         description="Tarea eliminada correctamente",
+     *         description="Tasca eliminada correctament",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Task deleted successfully"),
@@ -420,7 +450,7 @@ class TaskController extends Controller
      *
      *     @OA\Response(
      *         response=404,
-     *         description="Tarea no encontrada",
+     *         description="Tasca no trobada",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="No query results for model [Task]"),
@@ -430,7 +460,7 @@ class TaskController extends Controller
      *
      *     @OA\Response(
      *         response=500,
-     *         description="Error interno del servidor",
+     *         description="Error de servidor",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Error inesperado al eliminar la tarea"),

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Task;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -16,19 +17,26 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Toni F',
-            'email' => 'toni@toni.es',
-            'password' => '123'
-        ]);
+        if (User::where('email', 'toni@toni.es')->count() == 0) {
+            User::factory()->create([
+                'name' => 'Toni F',
+                'email' => 'toni@toni.es',
+                'password' => '123'
+            ]);
+        }
+        
+        if (User::where('email', 'raquel@raquel.es')->count() == 0) {
+            User::factory()->create([
+                'name' => 'Raquel F',
+                'email' => 'raquel@raquel.es',
+                'password' => '123'
+            ]);
+        }
 
-        User::factory()->create([
-            'name' => 'Raquel F',
-            'email' => 'raquel@raquel.es',
-            'password' => '123'
-        ]);
+        
 
         Task::factory(10)->create();
+        Category::factory(3)->create();
     
     }
 }

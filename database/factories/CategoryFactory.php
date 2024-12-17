@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Task>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>
  */
-class TaskFactory extends Factory
+class CategoryFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,10 +17,7 @@ class TaskFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'=>fake()->name(),
-            'description'=>fake()->sentence(),
-            'user_id'=>random_int(1,2),
-            'category_id'=>random_int(1,5)
+            'name'=>fake()->name()
         ];
     }
 }

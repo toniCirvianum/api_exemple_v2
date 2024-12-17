@@ -15,10 +15,437 @@
         }
     ],
     "paths": {
+        "/api/categories": {
+            "get": {
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Categories List",
+                "operationId": "3f5817a34833d0a1f4af4548dd3aeaba",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "rows": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "number",
+                                                        "example": "1"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "category task"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "example": "2023-02-23T00:09:16.000000Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "example": "2023-02-23T12:33:45.000000Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Crea uan categoria",
+                "operationId": "71fcad552bb0eaba9fb191fd8d8dcab0",
+                "requestBody": {
+                    "description": "Category details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Category swaggger"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Category created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "405": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/categories/{id}": {
+            "get": {
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Get category by id",
+                "description": "Return a category by Id",
+                "operationId": "getCategoryById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la categoria a recuperar",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Categoria tobada correctament",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "category": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "1"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Categoria_nom"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "httpCode": {
+                                            "type": "integer",
+                                            "example": 200
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Categoria no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Category not found"
+                                        },
+                                        "httpCode": {
+                                            "type": "integer",
+                                            "example": 404
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error inesperado"
+                                        },
+                                        "httpCode": {
+                                            "type": "integer",
+                                            "example": 500
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Udpate category by id",
+                "description": "Update a category by Id",
+                "operationId": "updateCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la categoria a actualizar",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Info de la cagegoria a actualizar",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "description",
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Nom de la categoria",
+                                        "type": "string",
+                                        "example": "Categoria23"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Categoria actualizada correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Category updated"
+                                        },
+                                        "httpCode": {
+                                            "type": "integer",
+                                            "example": 200
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Categoria no trobada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [Category]"
+                                        },
+                                        "httpCode": {
+                                            "type": "integer",
+                                            "example": 404
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validación",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The name field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "httpCode": {
+                                            "type": "integer",
+                                            "example": 422
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error inesperado"
+                                        },
+                                        "httpCode": {
+                                            "type": "integer",
+                                            "example": 500
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "categories"
+                ],
+                "summary": "delete category by id",
+                "description": "Elimina una categoria a través del id que es passa per paràmetre",
+                "operationId": "deleteCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id de la categoria a eliminar",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Categoria eliminada correctament",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Task deleted successfully"
+                                        },
+                                        "httpCode": {
+                                            "type": "integer",
+                                            "example": 200
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Categoria no trobada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [Category]"
+                                        },
+                                        "errorCode": {
+                                            "type": "integer",
+                                            "example": 404
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error de servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error inesperado al eliminar la tarea"
+                                        },
+                                        "httpCode": {
+                                            "type": "integer",
+                                            "example": 500
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/tasks": {
             "get": {
                 "tags": [
-                    "get_tasks"
+                    "tasks"
                 ],
                 "summary": "Tasks List",
                 "operationId": "471d938a3bfaeb6fbd981d7c3e2728b0",
@@ -71,7 +498,7 @@
             },
             "post": {
                 "tags": [
-                    "create_task"
+                    "tasks"
                 ],
                 "summary": "Crea uan tasca",
                 "operationId": "f803ebdb2300acdb7e93bbe8d0b9a2e8",
@@ -116,7 +543,7 @@
         "/api/tasks/{id}": {
             "get": {
                 "tags": [
-                    "get_task_bt_id"
+                    "tasks"
                 ],
                 "summary": "Get task by id",
                 "description": "Return a task by Id",
@@ -226,7 +653,7 @@
             },
             "put": {
                 "tags": [
-                    "update_task"
+                    "tasks"
                 ],
                 "summary": "Udpate task by id",
                 "description": "Update a task by Id",
@@ -398,16 +825,16 @@
             },
             "delete": {
                 "tags": [
-                    "delete_task"
+                    "tasks"
                 ],
-                "summary": "Eliminar una tarea",
-                "description": "Elimina una tarea específica por su ID. Devuelve un error si la tarea no existe.",
+                "summary": "delete task by id",
+                "description": "Elimina una tasca a través del id que es passa per paràmetre",
                 "operationId": "deleteTask",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID de la tarea a eliminar",
+                        "description": "id de la tasca a eliminar",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -416,7 +843,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Tarea eliminada correctamente",
+                        "description": "Tasca eliminada correctament",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -440,7 +867,7 @@
                         }
                     },
                     "404": {
-                        "description": "Tarea no encontrada",
+                        "description": "Tasca no trobada",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -464,7 +891,7 @@
                         }
                     },
                     "500": {
-                        "description": "Error interno del servidor",
+                        "description": "Error de servidor",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -493,24 +920,12 @@
     },
     "tags": [
         {
-            "name": "get_tasks",
-            "description": "get_tasks"
+            "name": "categories",
+            "description": "categories"
         },
         {
-            "name": "create_task",
-            "description": "create_task"
-        },
-        {
-            "name": "get_task_bt_id",
-            "description": "get_task_bt_id"
-        },
-        {
-            "name": "update_task",
-            "description": "update_task"
-        },
-        {
-            "name": "delete_task",
-            "description": "delete_task"
+            "name": "tasks",
+            "description": "tasks"
         }
     ]
 }

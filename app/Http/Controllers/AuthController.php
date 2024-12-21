@@ -32,7 +32,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
         Auth::login($user);
-        $token = $user->createToken()->plainTextToken;
+        $token = $user->createToken($user->email.'_token')->plainTextToken;
         return $this->responseMessage(true, 'new user registered', 
         ['user' => $user, 'token' => $token], 200);
     }
@@ -55,7 +55,12 @@ class AuthController extends Controller
 
     public function logout (Request $request) {
         $user=Auth::user();
-        $user->tokens->delete();
+        $user->tokens()->delete();
         return $this->responseMessage(true, 'User logout', null, 200);
+    }
+
+    public function profile(Request $request) {
+        $user = Auth::user();
+        return $this->responseMessage(true, 'User profile', ['user' => $user], 200);
     }
 }

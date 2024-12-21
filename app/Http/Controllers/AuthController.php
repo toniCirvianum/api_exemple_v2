@@ -13,7 +13,9 @@ class AuthController extends Controller
     public function register(Request $request)
     {
 
-        $this->checkUserAuth();
+        if ($this->checkUserAuth($request->email)) {
+            return $this->responseMessage(false, 'User is looged in', null, 409);
+        }
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
@@ -21,11 +23,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => $validator->errors(),
-                'errorCode' => 422
-            ]);
+            return $this->responseMessage(false, $validator->errors(), null, 422);
         }
 
         $user = User::create([
@@ -35,36 +33,22 @@ class AuthController extends Controller
         ]);
         Auth::login($user);
         $token = $user->createToken()->plainTextToken;
-        return response()->json([
-            'status'=>true,
-            'user'=> $user,
-            'message'=>"new user registered",
-            'token'=>$token,
-            'httpCode'=>200
-        ]);
-
-
+        return $this->responseMessage(true, 'new user registered', 
+        ['user' => $user, 'token' => $token], 200);
     }
 
     public function login(Request $request){
-        $this->checkUserAuth();
+        if ($this->checkUserAuth($request->email)) {
+            return $this->responseMessage(false, 'User is looged in', null, 409);
+        }
         //Valdiacio de dades
         //comprovacio del login
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
             $token = $user -> createToken('Api-Token')->plainTextToken;
-            return response()->json([
-                'status'=>true,
-                'token'=>$token,
-                'message'=> 'Login succesfull',
-                'httpCode'=>200
-            ]);
+            return $this->responseMessage(true, 'Login succesfull', ['token' => $token], 200);
         } else {
-            return response()->json([
-                'status'=>false,
-                'message'=> 'Login succesfull',
-                'httpCode'=>401
-            ]);
+            return $this->responseMessage(false, 'Login failed', null, 401);
         }
 
     }
@@ -72,11 +56,6 @@ class AuthController extends Controller
     public function logout (Request $request) {
         $user=Auth::user();
         $user->tokens->delete();
-        return response()->json([
-            'status'=>true,
-            'messagge'=>'USer logout',
-            'httpCode'=>200
-        ]);
-
+        return $this->responseMessage(true, 'User logout', null, 200);
     }
 }

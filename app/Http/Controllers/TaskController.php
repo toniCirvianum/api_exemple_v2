@@ -99,21 +99,12 @@ class TaskController extends Controller
                     'updated_at' => $task->updated_at
                 ];
             }
-            return response()->json([
-                'status' => true,
-                'tasks' => $tasksToResponse,
-                'httpCode' => 200
-            ]);
+            return $this->responseMessage(true, 'Tasks list', $tasksToResponse, 200);
+
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage(),
-                'httpCode' => 500
-            ]);
+            return $this->responseMessage(false, $th->getMessage(), null, 500);
         }
     }
-
-
 
     /**
      * Show the form for creating a new resource.
@@ -169,26 +160,14 @@ class TaskController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => $validator->errors(),
-                'httpCode' => 422
-            ]);
+            return $this->responseMessage(false, $validator->errors(), null, 422);
         }
 
         try {
             $task = Task::create($request->all());
-            return response()->json([
-                'status' => true,
-                'message' => 'Task afegida a la base de dades',
-                'httpCode' => 201
-            ]);
+            return $this->responseMessage(true, 'Task created successfully', $task, 201);
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage(),
-                'httpCode' => 500
-            ]);
+            return $this->responseMessage(false, $th->getMessage(), null, 500);
         }
     }
 
@@ -251,11 +230,7 @@ class TaskController extends Controller
     {
         $task = Task::find($id);
         if (is_null($task)) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Task not found',
-                'httpCode' => 404
-            ]);
+            return $this->responseMessage(false, 'Task not found', null, 404);
         }
 
         $tasksToResponse[] = [
@@ -268,21 +243,7 @@ class TaskController extends Controller
             'updated_at' => $task->updated_at
         ];
 
-        
-
-        try {
-            return response()->json([
-                'status' => true,
-                'task' => $tasksToResponse,
-                'httpCode' => 200
-            ]);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage(),
-                'httpCode' => 500
-            ]);
-        }
+        return $this->responseMessage(true, 'Task found', $tasksToResponse, 200);
     }
 
     /**
@@ -380,11 +341,7 @@ class TaskController extends Controller
         try {
             $task = Task::findOrFail($id);
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage(),
-                'httpCode' => 404
-            ]);
+            return $this->responseMessage(false, $th->getMessage(), null, 404);
         }
 
         $validator = Validator::make($request->all(), [
@@ -395,26 +352,14 @@ class TaskController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => $validator->errors(),
-                'httpCode' => 422
-            ]);
+            return $this->responseMessage(false, $validator->errors(), null, 422);
         }
 
         try {
             $task->update($request->all());
-            return response()->json([
-                'status' => true,
-                'message' => 'Task updated',
-                'httpCode' => 200
-            ]);
+            return $this->responseMessage(true, 'Task updated', $task, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage(),
-                'httpCode' => 404
-            ]);
+            return $this->responseMessage(false, $th->getMessage(), null, 500);
         }
     }
 
@@ -475,26 +420,15 @@ class TaskController extends Controller
         try {
             Task::findOrFail($id);
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => $e->getMessage(),
-                'errorCode' => 404
-            ]);
+            return $this->responseMessage(false, $e->getMessage(), null, 404);
         }
 
         try {
             Task::destroy($id);
-            return response()->json([
-                'status' => true,
-                'message' => 'Task deleted successfully',
-                'httpCode' => 200
-            ]);
+            return $this->responseMessage(true, 'Task deleted successfully', null, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage(),
-                'httpCode' => 500
-            ]);
+            return $this->responseMessage(false, $th->getMessage(), null, 500);
+
         }
     }
 }

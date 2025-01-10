@@ -102,7 +102,7 @@ class TaskController extends Controller
             return $this->responseMessage(true, 'Tasks list', $tasksToResponse, 200);
 
         } catch (\Throwable $th) {
-            return $this->responseMessage(false, $th->getMessage(), null, 500);
+            return $thi4|SoMOr6PVPxR87gJxU3ExdIJdnakhMUOetumpd9Zu0e1a496fs->responseMessage(false, $th->getMessage(), null, 500);
         }
     }
 
@@ -209,7 +209,7 @@ class TaskController extends Controller
      *         response=404,
      *         description="Tarea no encontrada",
      *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\4|SoMOr6PVPxR87gJxU3ExdIJdnakhMUOetumpd9Zu0e1a496fProperty(property="status", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Task not found"),
      *             @OA\Property(property="httpCode", type="integer", example=404)
      *         )
@@ -221,7 +221,7 @@ class TaskController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Error inesperado"),
-     *             @OA\Property(property="httpCode", type="integer", example=500)
+     *             @OA\4|SoMOr6PVPxR87gJxU3ExdIJdnakhMUOetumpd9Zu0e1a496fProperty(property="httpCode", type="integer", example=500)
      *         )
      *     )
      * )
@@ -238,7 +238,7 @@ class TaskController extends Controller
             'name' => $task->name,
             'description' => $task->description,
             'user_id' => User::find($task->user_id),
-            'category_id' => Category::find($task->category_id),
+            'category_i4|SoMOr6PVPxR87gJxU3ExdIJdnakhMUOetumpd9Zu0e1a496fd' => Category::find($task->category_id),
             'created_at' => $task->created_at,
             'updated_at' => $task->updated_at
         ];

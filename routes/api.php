@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,5 +28,8 @@ Route::get('holamon/{nom}', function ($nom) {
     return 'Hola Mon! ' . $nom;
 });
 
-Route::apiResource('tasks', TaskController::class);
+// Route::apiResource('tasks', TaskController::class);
 Route::apiResource('categories', CategoryController::class);
+Route::get('/files/{filename}', [FileController::class, 'getFile']);
+
+
